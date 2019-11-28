@@ -34,7 +34,7 @@ jobs:
           name: Create
           command: pipenv run conan create .
 
-  ush-recipe:
+  push-recipe:
     working_directory: ~/circleci-armadillo
     docker:
       - image: circleci/python:3.7.2
@@ -82,6 +82,7 @@ workflows:
     jobs:
       - create
       - push-recipe:
+          context: org-global
           requires:
             - create
           filters:
