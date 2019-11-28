@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  cpp:
+  create:
     working_directory: ~/circleci-armadillo
     docker:
       - image: circleci/python:3.7.2
@@ -41,4 +41,4 @@ workflows:
   version: 2
   main:
     jobs:
-      - cpp
+      - create
