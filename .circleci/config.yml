@@ -74,7 +74,7 @@ jobs:
           name: Upload recipe
           command: |
             pipenv run conan export .
-            pipenv run conan upload -r polars-org-remote Armadillo/*
+            pipenv run conan upload -r polars-org-remote --confirm Armadillo/*
 
 workflows:
   version: 2
