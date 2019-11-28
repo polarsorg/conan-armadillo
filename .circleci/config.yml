@@ -67,8 +67,8 @@ jobs:
       - run:
           name: Login
           command: |
-            conan remote add polars-org-remote https://api.bintray.com/conan/polarsorg/Polars
-            conan user -p $CONAN_API_KEY -r polars-org-remote $CONAN_LOGIN_USERNAME
+            pipenv run conan remote add polars-org-remote https://api.bintray.com/conan/polarsorg/Polars
+            pipenv run conan user -p $CONAN_API_KEY -r polars-org-remote $CONAN_LOGIN_USERNAME
 
       - run:
           name: Upload recipe
