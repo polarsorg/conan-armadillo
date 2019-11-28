@@ -34,8 +34,56 @@ jobs:
           name: Create
           command: pipenv run conan create .
 
+  ush-recipe:
+    working_directory: ~/circleci-armadillo
+    docker:
+      - image: circleci/python:3.7.2
+        environment:
+          PIPENV_VENV_IN_PROJECT: true
+          CONAN_NON_INTERACTIVE: true
+    steps:
+      - checkout
+
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/site-packages
+
+      - restore_cache:
+          keys:
+            - v1-{{ checksum "Pipfile.lock" }}
+            - v1-
+
+      - run: sudo pip install pipenv
+
+      - run: pipenv clean
+      - run: pipenv install --dev
+
+      - save_cache:
+          key: v1-{{ checksum "Pipfile.lock" }}
+          paths:
+            - ".venv"
+            - "/usr/local/bin"
+            - "/usr/local/lib/python3.7/site-packages"
+
+      - run:
+          name: Login
+          command: |
+            conan remote add polars-org-remote https://api.bintray.com/conan/polarsorg/Polars
+            conan user -p $CONAN_PASSWORD -r polars-org-remote $CONAN_LOGIN_USERNAME
+
+      - run:
+          name: Upload recipe
+          command: |
+            pipenv run conan export .
+            pipenv run conan upload -r polars-org-remote Armadillo/*
+
 workflows:
   version: 2
   main:
     jobs:
       - create
+      - push-recipe:
+          requires:
+            - create
+          filters:
+            branches:
+              only: master
