@@ -1,0 +1,44 @@
+version: 2.1
+jobs:
+  cpp:
+    working_directory: ~/circleci-armadillo
+    docker:
+      - image: circleci/python:3.7.2
+        environment:
+          PIPENV_VENV_IN_PROJECT: true
+          CONAN_NON_INTERACTIVE: true
+    steps:
+      - checkout
+
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/site-packages
+
+      - restore_cache:
+          keys:
+            - v1-{{ checksum "Pipfile.lock" }}
+            - v1-
+
+      - run: sudo pip install pipenv
+
+      - run: pipenv clean
+      - run: pipenv install --dev
+
+      - save_cache:
+          key: v1-{{ checksum "Pipfile.lock" }}
+          paths:
+            - ".venv"
+            - "/usr/local/bin"
+            - "/usr/local/lib/python3.7/site-packages"
+
+      - run:
+          name: Build
+          command: |
+            mkdir -p build/ci
+            cd build/ci
+            pipenv run conan create .
+
+workflows:
+  version: 2
+  main:
+    jobs:
+      - cpp

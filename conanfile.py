@@ -1,13 +1,14 @@
 from conans import ConanFile, CMake, tools
+from conans.errors import ConanException
 
 
-class FelixarmadilloConan(ConanFile):
+class PolarsOrgArmadilloConan(ConanFile):
     name = "Armadillo"
     version = "9.200.1"
     license = "Apache License 2.0"
-    url = "https://github.com/felix-org/armadillo-code"
+    url = "https://github.com/polarsorg/armadillo-code"
     description = "Armadillo C++ linear algebra (matrix) library"
-    settings = "cppstd", "os", "compiler", "build_type", "arch"
+    settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
     default_options = "shared=False"
     build_policy = "missing"
@@ -15,7 +16,7 @@ class FelixarmadilloConan(ConanFile):
 
     def source(self):
         git = tools.Git()
-        git.clone("https://github.com/felix-org/armadillo-code.git", "9.200.1")
+        git.clone("https://github.com/polarsorg/armadillo-code.git", self.version)
 
     def build(self):
         tools.replace_in_file(file_path="include/armadillo_bits/config.hpp",
