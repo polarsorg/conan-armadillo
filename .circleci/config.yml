@@ -31,11 +31,8 @@ jobs:
             - "/usr/local/lib/python3.7/site-packages"
 
       - run:
-          name: Build
-          command: |
-            mkdir -p build/ci
-            cd build/ci
-            pipenv run conan create .
+          name: Create
+          command: pipenv run conan create .
 
 workflows:
   version: 2
