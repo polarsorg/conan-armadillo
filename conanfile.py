@@ -26,7 +26,7 @@ class PolarsOrgArmadilloConan(ConanFile):
     def requirements(self):
         # Or add a new requirement!
         if self.settings.os not in ['Macos', 'iOS']:
-            self.requires("openblas/0.2.20@conan/stable")
+            self.requires("openblas/0.3.5@conan/stable")
 
     def source(self):
         git = tools.Git()
