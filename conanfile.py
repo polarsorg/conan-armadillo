@@ -8,10 +8,21 @@ class PolarsOrgArmadilloConan(ConanFile):
     url = "https://github.com/polarsorg/armadillo-code"
     description = "Armadillo C++ linear algebra (matrix) library"
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False]}
+    options = {
+        "shared": [True, False],
+    }
     default_options = "shared=False"
     build_policy = "missing"
     generators = "cmake"
+    requires = "openblas/0.2.20@conan/stable"
+    build_requires = [
+        "pkg-config_installer/0.29.2@bincrafters/stable",
+    ]
+
+    def build_requirements(self):
+        # Or add a new requirement!
+        if self.settings.os == 'Android':
+            self.build_requires("android_ndk_installer/r20@bincrafters/stable")
 
     def source(self):
         git = tools.Git()
@@ -19,12 +30,17 @@ class PolarsOrgArmadilloConan(ConanFile):
 
     def build(self):
         tools.replace_in_file(file_path="include/armadillo_bits/config.hpp",
-                              search="#define ARMA_USE_LAPACK",
-                              replace="//#define ARMA_USE_LAPACK")
+                              search="#define ARMA_USE_WRAPPER",
+                              replace="//#define ARMA_USE_WRAPPER")
+        tools.replace_in_file(file_path="CMakeLists.txt",
+                              search="project(armadillo CXX C)",
+                              replace='\n'.join([
+                                  "project(armadillo CXX C)",
+                                  "include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)",
+                                  "conan_basic_setup()",
+                                  "list(INSERT CMAKE_FIND_ROOT_PATH 0 ${CONAN_OPENBLAS_ROOT})"
+                              ]))
 
-        tools.replace_in_file(file_path="include/armadillo_bits/config.hpp",
-                              search="#define ARMA_USE_BLAS",
-                              replace="//#define ARMA_USE_BLAS")
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
