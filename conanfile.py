@@ -18,11 +18,6 @@ class PolarsOrgArmadilloConan(ConanFile):
         "pkg-config_installer/0.29.2@bincrafters/stable",
     ]
 
-    def build_requirements(self):
-        # Or add a new requirement!
-        if self.settings.os == 'Android':
-            self.build_requires("android_ndk_installer/r20@bincrafters/stable")
-
     def requirements(self):
         # Or add a new requirement!
         if self.settings.os not in ['Macos', 'iOS']:
