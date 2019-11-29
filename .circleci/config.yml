@@ -15,8 +15,8 @@ jobs:
 
       - restore_cache:
           keys:
-            - v1-{{ checksum "Pipfile.lock" }}
-            - v1-
+            - pipenv-v1-{{ checksum "Pipfile.lock" }}
+            - pipenv-v1-
 
       - run: sudo pip install pipenv
 
@@ -24,11 +24,16 @@ jobs:
       - run: pipenv install --dev
 
       - save_cache:
-          key: v1-{{ checksum "Pipfile.lock" }}
+          key: pipenv-v1-{{ checksum "Pipfile.lock" }}
           paths:
             - ".venv"
             - "/usr/local/bin"
             - "/usr/local/lib/python3.7/site-packages"
+
+      - restore_cache:
+          keys:
+            - conan-v1-{{ checksum "conanfile.py" }}
+            - conan-v1-
 
       - run:
           name: Create
@@ -36,6 +41,13 @@ jobs:
       - run:
           name: Cross-build android arm64-v8a abi
           command: pipenv run conan create . --profile ./profiles/android-arm64-v8a --build missing
+
+      - save_cache:
+          key: conan-v1-{{ checksum "conanfile.py" }}
+          paths:
+            - "~/.conan/data/android_ndk_installer"
+            - "~/.conan/data/openblas"
+            - "~/.conan/data/pkg-config_installer"
 
   push-recipe:
     working_directory: ~/circleci-armadillo
