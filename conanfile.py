@@ -16,9 +16,13 @@ class PolarsOrgArmadilloConan(ConanFile):
     generators = "cmake"
     requires = "openblas/0.2.20@conan/stable"
     build_requires = [
-        "android_ndk_installer/r20@bincrafters/stable",
         "pkg-config_installer/0.29.2@bincrafters/stable",
     ]
+
+    def build_requirements(self):
+        # Or add a new requirement!
+        if self.settings.os == 'Android':
+            self.build_requires("android_ndk_installer/r20@bincrafters/stable")
 
     def source(self):
         git = tools.Git()
