@@ -18,15 +18,10 @@ class PolarsOrgArmadilloConan(ConanFile):
         "pkg-config_installer/0.29.2@bincrafters/stable",
     ]
 
-    def build_requirements(self):
-        # Or add a new requirement!
-        if self.settings.os == 'Android':
-            self.build_requires("android_ndk_installer/r20@bincrafters/stable")
-
     def requirements(self):
         # Or add a new requirement!
         if self.settings.os not in ['Macos', 'iOS']:
-            self.requires("openblas/0.2.20@conan/stable")
+            self.requires("openblas/0.3.5@conan/stable")
 
     def source(self):
         git = tools.Git()
