@@ -14,7 +14,6 @@ class PolarsOrgArmadilloConan(ConanFile):
     default_options = "shared=False"
     build_policy = "missing"
     generators = "cmake"
-    requires = "openblas/0.2.20@conan/stable"
     build_requires = [
         "pkg-config_installer/0.29.2@bincrafters/stable",
     ]
@@ -24,6 +23,11 @@ class PolarsOrgArmadilloConan(ConanFile):
         if self.settings.os == 'Android':
             self.build_requires("android_ndk_installer/r20@bincrafters/stable")
 
+    def requirements(self):
+        # Or add a new requirement!
+        if self.settings.os not in ['Macos', 'iOS']:
+            self.requires("openblas/0.2.20@conan/stable")
+
     def source(self):
         git = tools.Git()
         git.clone("https://github.com/polarsorg/armadillo-code.git", self.version)
@@ -32,14 +36,18 @@ class PolarsOrgArmadilloConan(ConanFile):
         tools.replace_in_file(file_path="include/armadillo_bits/config.hpp",
                               search="#define ARMA_USE_WRAPPER",
                               replace="//#define ARMA_USE_WRAPPER")
+
+        cmake_additions = [
+            "project(armadillo CXX C)",
+            "include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)",
+            "conan_basic_setup()",
+        ]
+        if self.settings.os not in ['Macos', 'iOS']:
+            cmake_additions.append("list(INSERT CMAKE_FIND_ROOT_PATH 0 ${CONAN_OPENBLAS_ROOT})")
+
         tools.replace_in_file(file_path="CMakeLists.txt",
                               search="project(armadillo CXX C)",
-                              replace='\n'.join([
-                                  "project(armadillo CXX C)",
-                                  "include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)",
-                                  "conan_basic_setup()",
-                                  "list(INSERT CMAKE_FIND_ROOT_PATH 0 ${CONAN_OPENBLAS_ROOT})"
-                              ]))
+                              replace='\n'.join(cmake_additions))
 
         cmake = CMake(self)
         cmake.configure()
