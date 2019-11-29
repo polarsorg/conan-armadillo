@@ -36,6 +36,10 @@ jobs:
             - conan-v1-
 
       - run:
+          name: Add remote
+          command: pipenv run conan remote add conan-community https://api.bintray.com/conan/conan-community/conan
+
+      - run:
           name: Create
           command: pipenv run conan create .
       - run:
@@ -80,8 +84,9 @@ jobs:
             - "/usr/local/lib/python3.7/site-packages"
 
       - run:
-          name: Login
+          name: Add remotes and login
           command: |
+            pipenv run conan remote add conan-community https://api.bintray.com/conan/conan-community/conan
             pipenv run conan remote add polars-org-remote https://api.bintray.com/conan/polarsorg/Polars
             pipenv run conan user -p $CONAN_API_KEY -r polars-org-remote $CONAN_LOGIN_USERNAME
 
