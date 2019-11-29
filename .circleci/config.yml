@@ -33,6 +33,9 @@ jobs:
       - run:
           name: Create
           command: pipenv run conan create .
+      - run:
+          name: Cross-build android arm64-v8a abi
+          command: pipenv run conan create . --profile ./profiles/android-arm64-v8a --build missing
 
   push-recipe:
     working_directory: ~/circleci-armadillo
