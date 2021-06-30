@@ -50,6 +50,7 @@ jobs:
           command: |
             pipenv run conan remote add conancenter https://center.conan.io
             pipenv run conan remote add polars-conan-remote https://polars.jfrog.io/artifactory/api/conan/polars-conan
+            pipenv run conan user -p $CONAN_ARTIFACTORY_KEY -r polars-conan-remote $CONAN_LOGIN_USERNAME
 
       - run:
           name: Native build
@@ -125,7 +126,8 @@ workflows:
   version: 2
   main:
     jobs:
-      - create
+      - create:
+          context: artifactory-user
       - push-recipe:
           context: artifactory-user
           requires:
