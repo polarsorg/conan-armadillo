@@ -132,7 +132,6 @@ workflows:
             branches:
               only: master
       - push-recipe:
-          context: artifactory-user
           requires:
             - create
           filters:
