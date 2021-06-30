@@ -46,7 +46,7 @@ jobs:
             - conan-v1-{{ checksum "conanfile.py" }}
 
       - run:
-          name: Add remote and login
+          name: Add remote and login conan
           command: |
             pipenv run conan remote add conancenter https://center.conan.io
             pipenv run conan remote add polars-conan-remote https://polars.jfrog.io/artifactory/api/conan/polars-conan
