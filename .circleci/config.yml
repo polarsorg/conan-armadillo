@@ -126,7 +126,7 @@ workflows:
   version: 2
   main:
     jobs:
-      - create
+      - create:
           context: artifactory-user
       - push-recipe:
           context: artifactory-user
