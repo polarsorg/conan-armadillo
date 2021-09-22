@@ -125,10 +125,7 @@ workflows:
   version: 2
   main:
     jobs:
-      - create:
-          filters:
-            branches:
-              only: master
+      - create
       - push-recipe:
           context: artifactory-user
           requires:
