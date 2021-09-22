@@ -127,11 +127,11 @@ workflows:
   main:
     jobs:
       - create:
-          context: artifactory-user
           filters:
             branches:
               only: master
       - push-recipe:
+          context: artifactory-user
           requires:
             - create
           filters:
