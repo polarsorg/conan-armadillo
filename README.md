@@ -9,7 +9,6 @@ No binaries are pre-build at present so use `--build missing` in your project.
 
 ### Build instructions
 
-
 To add Armadillo to your conan cache:
 ```sh
 $ conan create . user/channel
