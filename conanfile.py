@@ -15,13 +15,13 @@ class PolarsOrgArmadilloConan(ConanFile):
     build_policy = "missing"
     generators = "cmake"
     build_requires = [
-        "pkg-config_installer/0.29.2@bincrafters/stable",
+        "pkgconf/1.7.4",
     ]
 
     def requirements(self):
         # Or add a new requirement!
         if self.settings.os not in ['Macos', 'iOS']:
-            self.requires("openblas/0.3.5@conan/stable")
+            self.requires("openblas/0.3.7")
 
     def source(self):
         git = tools.Git()
