@@ -14,7 +14,7 @@ class PolarsOrgArmadilloConan(ConanFile):
     default_options = "shared=False"
     build_policy = "missing"
     generators = "cmake"
-    build_requires = [
+    tool_requires = [
         "pkgconf/1.7.4",
     ]
 
