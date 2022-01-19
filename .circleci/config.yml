@@ -56,7 +56,7 @@ jobs:
           command: pipenv run conan create .
       - run:
           name: Cross-build android arm64-v8a abi
-          command: pipenv run conan create . --profile ./profiles/android-arm64-v8a --build missing
+          command: pipenv run conan create . --profile:build ./profiles/android-arm64-v8a --profile:host ./profiles/host-profile --build missing
 
       - save_cache:
           name: Save conan dependencies cache
