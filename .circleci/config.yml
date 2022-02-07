@@ -47,22 +47,25 @@ jobs:
 
       - run:
           name: Add remote
-          command: pipenv run conan remote add conan-community https://api.bintray.com/conan/conan-community/conan
+          command: |
+            pipenv run conan remote clean
+            pipenv run conan remote add conancenter https://center.conan.io
 
       - run:
           name: Native build
           command: pipenv run conan create .
       - run:
+          name: Install android-ndk
+          command: pipenv run conan install android-ndk/r21d@ --profile ./profiles/linux-profile
+      - run:
           name: Cross-build android arm64-v8a abi
-          command: pipenv run conan create . --profile ./profiles/android-arm64-v8a --build missing
+          command: pipenv run conan create . --profile:build ./profiles/linux-profile --profile:host ./profiles/android-profile
 
       - save_cache:
           name: Save conan dependencies cache
           key: conan-v1-{{ checksum "conanfile.py" }}
           paths:
-            - "~/.conan/data/android_ndk_installer"
-            - "~/.conan/data/openblas"
-            - "~/.conan/data/pkg-config_installer"
+            - "~/.conan/data/android-ndk"
 
   push-recipe:
     working_directory: ~/circleci-armadillo
@@ -109,15 +112,16 @@ jobs:
       - run:
           name: Add remotes and login
           command: |
-            pipenv run conan remote add conan-community https://api.bintray.com/conan/conan-community/conan
-            pipenv run conan remote add polars-org-remote https://api.bintray.com/conan/polarsorg/Polars
-            pipenv run conan user -p $CONAN_API_KEY -r polars-org-remote $CONAN_LOGIN_USERNAME
+            pipenv run conan remote clean
+            pipenv run conan remote add conancenter https://center.conan.io
+            pipenv run conan remote add polars-conan-remote https://polars.jfrog.io/artifactory/api/conan/polars-conan
+            pipenv run conan user $CONAN_LOGIN_USERNAME -r polars-conan-remote -p $CONAN_USER_PASSWORD
 
       - run:
           name: Upload recipe
           command: |
             pipenv run conan export .
-            pipenv run conan upload -r polars-org-remote --confirm Armadillo/*
+            pipenv run conan upload -r polars-conan-remote --confirm Armadillo/*
 
 workflows:
   version: 2
@@ -125,7 +129,7 @@ workflows:
     jobs:
       - create
       - push-recipe:
-          context: bintray-machine-user
+          context: artifactory-user
           requires:
             - create
           filters:

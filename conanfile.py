@@ -14,14 +14,9 @@ class PolarsOrgArmadilloConan(ConanFile):
     default_options = "shared=False"
     build_policy = "missing"
     generators = "cmake"
-    build_requires = [
-        "pkg-config_installer/0.29.2@bincrafters/stable",
+    tool_requires = [
+        "pkgconf/1.7.4",
     ]
-
-    def requirements(self):
-        # Or add a new requirement!
-        if self.settings.os not in ['Macos', 'iOS']:
-            self.requires("openblas/0.3.5@conan/stable")
 
     def source(self):
         git = tools.Git()
@@ -37,8 +32,6 @@ class PolarsOrgArmadilloConan(ConanFile):
             "include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)",
             "conan_basic_setup()",
         ]
-        if self.settings.os not in ['Macos', 'iOS']:
-            cmake_additions.append("list(INSERT CMAKE_FIND_ROOT_PATH 0 ${CONAN_OPENBLAS_ROOT})")
 
         tools.replace_in_file(file_path="CMakeLists.txt",
                               search="project(armadillo CXX C)",
