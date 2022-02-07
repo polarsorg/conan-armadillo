@@ -66,7 +66,6 @@ jobs:
           key: conan-v1-{{ checksum "conanfile.py" }}
           paths:
             - "~/.conan/data/android-ndk"
-            - "~/.conan/data/pkg-config_installer"
 
   push-recipe:
     working_directory: ~/circleci-armadillo
