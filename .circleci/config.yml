@@ -115,7 +115,7 @@ jobs:
             pipenv run conan remote clean
             pipenv run conan remote add conancenter https://center.conan.io
             pipenv run conan remote add polars-conan-remote https://polars.jfrog.io/artifactory/api/conan/polars-conan
-            pipenv run conan user -p $CONAN_ARTIFACTORY_KEY -r polars-conan-remote $CONAN_LOGIN_USERNAME
+            pipenv run conan user $CONAN_LOGIN_USERNAME -r polars-conan-remote -p $CONAN_USER_PASSWORD
 
       - run:
           name: Upload recipe
