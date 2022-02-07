@@ -65,8 +65,7 @@ jobs:
           name: Save conan dependencies cache
           key: conan-v1-{{ checksum "conanfile.py" }}
           paths:
-            - "~/.conan/data/android_ndk_installer"
-            - "~/.conan/data/openblas"
+            - "~/.conan/data/android-ndk"
             - "~/.conan/data/pkg-config_installer"
 
   push-recipe:

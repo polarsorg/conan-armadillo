@@ -18,11 +18,6 @@ class PolarsOrgArmadilloConan(ConanFile):
         "pkgconf/1.7.4",
     ]
 
-    # def requirements(self):
-        # Or add a new requirement!
-        # if self.settings.os not in ['Macos', 'iOS']:
-        #     self.requires("openblas/0.3.7")
-
     def source(self):
         git = tools.Git()
         git.clone("https://github.com/polarsorg/armadillo-code.git", self.version)
@@ -37,8 +32,6 @@ class PolarsOrgArmadilloConan(ConanFile):
             "include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)",
             "conan_basic_setup()",
         ]
-        # if self.settings.os not in ['Macos', 'iOS']:
-        #     cmake_additions.append("list(INSERT CMAKE_FIND_ROOT_PATH 0 ${CONAN_OPENBLAS_ROOT})")
 
         tools.replace_in_file(file_path="CMakeLists.txt",
                               search="project(armadillo CXX C)",
