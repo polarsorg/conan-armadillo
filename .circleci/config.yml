@@ -55,8 +55,11 @@ jobs:
           name: Native build
           command: pipenv run conan create .
       - run:
+          name: Install android-ndk
+          command: conan install android-ndk/r21d@ --profile ./profiles/host-profile
+      - run:
           name: Cross-build android arm64-v8a abi
-          command: pipenv run conan create . --profile:build ./profiles/android-arm64-v8a --profile:host ./profiles/host-profile
+          command: pipenv run conan create . --profile:build ./profiles/host-profile --profile:host ./profiles/android-profile
 
       - save_cache:
           name: Save conan dependencies cache
